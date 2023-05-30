@@ -43,7 +43,9 @@ const checkForm =()=>{
 
 const isFormEmpty = ()=>{
     return !username.length || !email.length || !password.length || !confirmpassword.length
+    //if false(where form is filled up) then should return false
 } 
+
 
 const checkPassword = ()=>{
     if(password.length < 8){
