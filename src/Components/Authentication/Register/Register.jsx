@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import "./Register.css"
 import slackLogo from './Slack-Icon.svg';
 
+import firebase from '../../../server/firebase';
+
 let userfile = {
   username: "",
   email: "",
@@ -79,6 +81,7 @@ const onSubmit = (e) =>{
 
 
     if(checkForm()){
+
     }
 }
 console.log(user);

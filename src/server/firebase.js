@@ -1,6 +1,9 @@
 import firebase from 'firebase';
+
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/storage';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3RVrAt2sb9yFCiCpi-WmKzjhdTSZ1Fkk",
@@ -13,7 +16,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 firebase.analytics();
 
 export default firebase;
