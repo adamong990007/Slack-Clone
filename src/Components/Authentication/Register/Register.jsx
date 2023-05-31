@@ -11,10 +11,10 @@ let userfile = {
 let errors =[];
 
 const Register = () => {
-const [username,setUsername] = useState(null);
-const [email,setEmail] = useState(null);
-const [password,setPassword] = useState(null);
-const [confirmpassword,setConfirmPassword] = useState(null);
+const [username,setUsername] = useState('');
+const [email,setEmail] = useState('');
+const [password,setPassword] = useState('');
+const [confirmpassword,setConfirmPassword] = useState('');
 
 const [user,setUser] = useState(userfile);
 const [error,setError] = useState(errors);
@@ -22,20 +22,21 @@ const [error,setError] = useState(errors);
 
 
 const InputHandler = (e)=>{
-    setUser((currenState)=>{
+    setUser((currentState)=>{
         let currentUser = {...currentState};
-        currentUser[e.target.username] = username;
+        currentUser[e.target.name] = e.target.value;
         return currentUser;
     })
+    console.log(user);
 
 }
+
 
 const checkForm =()=>{
     if(isFormEmpty()){
         setError((error)=>error.concat({message: "Please Fill all fields"}));
         return false;
     }else if(!checkPassword()){
-        setError((error)=>error.concat({message: "Given Password Invalid"}));
         return false;
     }
     return true;
@@ -50,8 +51,10 @@ const isFormEmpty = ()=>{
 const checkPassword = ()=>{
     if(password.length < 8){
         console.log(password.length)
+        setError((error)=>error.concat({message:"Password length must be greater than 8"}))
         return false;
     }else if(password !== confirmpassword){
+        setError((error)=>error.concat({message: "Password does not match confirm password"}))
         console.log(password !== confirmpassword);
         return false;
     }
@@ -59,7 +62,7 @@ const checkPassword = ()=>{
 }
 
 const formaterrors = () =>{
-    return error.map((error,index)=><p key={index}>{error.message}</p>)
+    return error.map((error,index)=> <p key={index}>{error.message}</p>)
 }
 
 const onSubmit = (e) =>{
@@ -82,7 +85,7 @@ const onSubmit = (e) =>{
           placeholder="User Name"
         />
         <input
-          type="email"
+          type="text"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           placeholder="Email"
