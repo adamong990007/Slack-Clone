@@ -25,9 +25,9 @@ const InputHandler = (e)=>{
     setUser((currentState)=>{
         let currentUser = {...currentState};
         currentUser[e.target.name] = e.target.value;
+        console.log(currentUser);
         return currentUser;
     })
-    console.log(user);
 
 }
 
@@ -79,24 +79,28 @@ const onSubmit = (e) =>{
       </div>
       <form onSubmit={onSubmit}>
         <input
+          name="username"
           type="text"
           onChange={(e) => setUsername(e.target.value)}
           value={username}
           placeholder="User Name"
         />
         <input
+          name="email"
           type="text"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           placeholder="Email"
         />
         <input
+          name="password"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           placeholder="Password"
         />
         <input
+          name="confirmpassword"
           type="password"
           onChange={(e) => setConfirmPassword(e.target.value)}
           value={confirmpassword}
