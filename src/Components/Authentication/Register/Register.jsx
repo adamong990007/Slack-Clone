@@ -16,20 +16,19 @@ const [email,setEmail] = useState('');
 const [password,setPassword] = useState('');
 const [confirmpassword,setConfirmPassword] = useState('');
 
+console.log(username,email,password,confirmpassword)
+
 const [user,setUser] = useState(userfile);
 const [error,setError] = useState(errors);
 
+// const InputHandler = (e) => {
+//   setUser((currentState) => {
+//     let currentUser = { ...currentState };
+//     currentUser[e.target.name] = e.target.value;
 
-
-const InputHandler = (e)=>{
-    setUser((currentState)=>{
-        let currentUser = {...currentState};
-        currentUser[e.target.name] = e.target.value;
-        console.log(currentUser);
-        return currentUser;
-    })
-
-}
+//     return currentUser;
+//   });
+// };
 
 
 const checkForm =()=>{
@@ -68,9 +67,22 @@ const formaterrors = () =>{
 const onSubmit = (e) =>{
     e.preventDefault();
     setError(()=>[]);
+    setUser((currentState) => {
+      let currentUser = { ...currentState };
+      currentUser.username = username;
+      currentUser.email = email;
+      currentUser.password = password;
+      currentUser.confirmpassword = confirmpassword;
+
+      return currentUser;
+    });
+
+
     if(checkForm()){
     }
 }
+console.log(user);
+
 
   return (
     <div className="register">
@@ -106,12 +118,14 @@ const onSubmit = (e) =>{
           value={confirmpassword}
           placeholder="Confirm Password"
         />
-        <button type='submit'>Submit</button>
+        <button type="submit">Submit</button>
       </form>
-      {error.length >0 &&<div>
-        <h4>Errors</h4>
-        {formaterrors()}
-      </div>}
+      {error.length > 0 && (
+        <div>
+          <h4>Errors</h4>
+          {formaterrors()}
+        </div>
+      )}
     </div>
   );
 }
