@@ -3,13 +3,14 @@ import { useState } from 'react'
 // import viteLogo from '/vite.svg'
 import './App.css'
 import Register from './Components/Authentication/Register/Register'
-
+import Login from './Components/Authentication/Login/Login'
 function App() {
   // const [count, setCount] = useState(0)
 
   return (
     <>
-    <Register/>
+    {/* <Register/> */}
+    <Login/>
     </>
   )
 }

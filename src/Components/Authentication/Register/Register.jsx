@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./Register.css"
 import slackLogo from './Slack-Icon.svg';
 
-import firebase from '../../../server/firebase';
+// import firebase from '../../../server/firebase';
 
 let userfile = {
   username: "",
@@ -85,7 +85,7 @@ const onSubmit = (e) =>{
     }
 }
 console.log(user);
-
+//Note: Refer to Part 4 of YT for firebase stuff. 
 
   return (
     <div className="register">
@@ -129,6 +129,11 @@ console.log(user);
           {formaterrors()}
         </div>
       )}
+      <div>
+        <p>
+          Already a User?
+        </p>
+      </div>
     </div>
   );
 }
