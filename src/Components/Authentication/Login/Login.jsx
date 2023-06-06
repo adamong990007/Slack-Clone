@@ -13,10 +13,6 @@ const Login = () => {
 
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
-
- 
-console.log(email, password);
-
 const [user, setUser] = useState(userfile);
 const [error, setError] = useState(errors);
 
@@ -47,11 +43,8 @@ const onSubmit = (e) => {
   setError(() => []);
   setUser((currentState) => {
     let currentUser = { ...currentState };
-    currentUser.username = username;
     currentUser.email = email;
     currentUser.password = password;
-    currentUser.confirmpassword = confirmpassword;
-
     return currentUser;
   });
 
