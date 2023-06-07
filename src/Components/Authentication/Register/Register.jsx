@@ -1,91 +1,58 @@
-import React, { useEffect, useState } from 'react'
-import "./Register.css"
-import slackLogo from './Slack-Icon.svg';
+import React from 'react'
+import { useState } from 'react'
+import "./Register.css";
+import slackLogo from "./Slack-Icon.svg";
 
-// import firebase from '../../../server/firebase';
-
-let userfile = {
-  username: "",
-  email: "",
-  password: "",
-  confirmpassword: "",
-};
-let errors =[];
 
 const Register = () => {
-const [username,setUsername] = useState('');
-const [email,setEmail] = useState('');
-const [password,setPassword] = useState('');
-const [confirmpassword,setConfirmPassword] = useState('');
-
-console.log(username,email,password,confirmpassword)
-
-const [user,setUser] = useState(userfile);
-const [error,setError] = useState(errors);
-
-// const InputHandler = (e) => {
-//   setUser((currentState) => {
-//     let currentUser = { ...currentState };
-//     currentUser[e.target.name] = e.target.value;
-
-//     return currentUser;
-//   });
-// };
-
-
-const checkForm =()=>{
-    if(isFormEmpty()){
-        setError((error)=>error.concat({message: "Please Fill all fields"}));
-        return false;
-    }else if(!checkPassword()){
-        return false;
-    }
-    return true;
-}
-
-const isFormEmpty = ()=>{
-    return !username.length || !email.length || !password.length || !confirmpassword.length
-    //if false(where form is filled up) then should return false
-} 
-
-
-const checkPassword = ()=>{
-    if(password.length < 8){
-        console.log(password.length)
-        setError((error)=>error.concat({message:"Password length must be greater than 8"}))
-        return false;
-    }else if(password !== confirmpassword){
-        setError((error)=>error.concat({message: "Password does not match confirm password"}))
-        console.log(password !== confirmpassword);
-        return false;
-    }
-    return true;
-}
-
-const formaterrors = () =>{
-    return error.map((error,index)=> <p key={index}>{error.message}</p>)
-}
-
-const onSubmit = (e) =>{
-    e.preventDefault();
-    setError(()=>[]);
-    setUser((currentState) => {
-      let currentUser = { ...currentState };
-      currentUser.username = username;
-      currentUser.email = email;
-      currentUser.password = password;
-      currentUser.confirmpassword = confirmpassword;
-
-      return currentUser;
+    const [user, setUser] = useState({
+        email: '',
+        password: '',
+        passwordConfirm:''
     });
 
+    console.log(user);
+    const [error, setError] = useState("");
 
-    if(checkForm()){
+    const register = async (user)=>{
 
+        const response = await fetch("http://206.189.91.54/api/v1/auth",{
+        method: "POST",
+        headers:{
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(user)
+        });
+
+        if(response.status === 200){
+            Navigate("/");
+            setError(response.status);
+        }else{
+            const data = await response.json();
+            const error = data.errors.full_messages;
+            setError(error);
+        }
     }
-}
-console.log(user);
-//Note: Refer to Part 4 of YT for firebase stuff. 
+
+    const onSubmit = (e)=>{
+        e.preventDefault();
+        setError("");
+
+        if(user.password !== user.passwordConfirm){
+            setError("Passwords do not match");
+        }
+        if(!user.password.length||!user.email.length||!user.passwordConfirm.length){
+            setError("Please fill in all fields");
+        }
+        if(!user.password > 6 || !user.passwordConfirm > 6){
+            setError("Password must be greater than 6");
+        }
+        else{
+            register(user);
+        }
+        
+        }
+
 
   return (
     <div className="register">
@@ -94,31 +61,24 @@ console.log(user);
       </div>
       <form onSubmit={onSubmit}>
         <input
-          name="username"
-          type="text"
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-          placeholder="User Name"
-        />
-        <input
           name="email"
           type="text"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          onChange={(e) => setUser({...user, email: e.target.value})}
+          value={user.email}
           placeholder="Email"
         />
         <input
           name="password"
           type="password"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
+          onChange={(e) => setUser({...user, password: e.target.value})}
+          value={user.password}
           placeholder="Password"
         />
         <input
           name="confirmpassword"
           type="password"
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          value={confirmpassword}
+          onChange={(e) => setUser({...user, passwordConfirm: e.target.value})}
+          value={user.passwordConfirm}
           placeholder="Confirm Password"
         />
         <button type="submit">Submit</button>
@@ -126,7 +86,7 @@ console.log(user);
       {error.length > 0 && (
         <div>
           <h4>Errors</h4>
-          {formaterrors()}
+          {error}
         </div>
       )}
       <div>
@@ -135,7 +95,7 @@ console.log(user);
         </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default Register;
+export default Register

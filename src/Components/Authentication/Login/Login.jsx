@@ -3,94 +3,82 @@ import "./Login.css"
 import slackLogo from "./Slack-Icon.svg";
 import { useState } from 'react';
 
-let userfile = {
-  email: "",
-  password: "",
-};
-let errors = [];
-
 const Login = () => {
 
-const [email, setEmail] = useState("");
-const [password, setPassword] = useState("");
-const [user, setUser] = useState(userfile);
-const [error, setError] = useState(errors);
+const [user, setUser] = useState({
+      email: "",
+      password: ""
+    });
 
-const checkForm = () => {
-  if (isFormEmpty()) {
-    setError((error) => error.concat({ message: "Please Fill all fields" }));
-    return false;
-  } 
-  return true;
-};
+const [error, setError] = useState("");
+const [loginDetails, setLoginDetails] = useState(null);
 
-const isFormEmpty = () => {
-  return (
-    !email.length ||
-    !password.length
-  );
-  //if false(where form is filled up) then should return false
-};
+const signInSlack = async () =>{
 
+  const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in",{
+    method: "POST",
+    headers:{
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
 
-
-const formaterrors = () => {
-  return error.map((error, index) => <p key={index}>{error.message}</p>);
-};
-
-const onSubmit = (e) => {
-  e.preventDefault();
-  setError(() => []);
-  setUser((currentState) => {
-    let currentUser = { ...currentState };
-    currentUser.email = email;
-    currentUser.password = password;
-    return currentUser;
   });
+  if(response.status === 200){
+    setError("Success");
+    setLoginDetails({
+      "access-token": response.headers.get("access-token"),
+      "client": response.headers.get("client"),
+      "expiry": response.headers.get("expiry"),
+      "uid": response.headers.get("uid")
+    });
 
-  if (checkForm()) {
+    const data = await response.json();
+    console.log(data)
+    console.log(loginDetails);
+    ///////
+    
   }
-};
-console.log(user);
 
+
+
+}
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    signInSlack();
+  };
   return (
-    <>
-      <div className="login">
-        <div>
-          <img src={slackLogo} alt=" slack logo" />
-        </div>
-        <form onSubmit={onSubmit}>
-          <input
-            name="email"
-            type="text"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            placeholder="Email"
-          />
-          <input
-            name="password"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            placeholder="Password"
-          />
-
-          <button type="submit">Login</button>
-        </form>
-        {error.length > 0 && (
-          <div>
-            <h4>Errors</h4>
-            {formaterrors()}
-          </div>
-        )}
-        <div>
-          {/* <p>
-            Already a User?
-            <link to="/login"> Login</link>
-          </p> */}
-        </div>
+    <div className="login">
+      <div>
+        <img src={slackLogo} alt=" slack logo" />
       </div>
-    </>
+      <form onSubmit={onSubmit}>
+        <input
+          name="email"
+          type="text"
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
+          value={user.email}
+          placeholder="Email"
+        />
+        <input
+          name="password"
+          type="password"
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
+          value={user.password}
+          placeholder="Password"
+        />
+        <button type="submit">Submit</button>
+      </form>
+      {error.length > 0 && (
+        <div>
+          <h4>Errors</h4>
+          {error}
+        </div>
+      )}
+      <div>
+        <p>Already a User?</p>
+      </div>
+    </div>
   );
 }
 
