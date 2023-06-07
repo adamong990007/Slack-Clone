@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import "./Login.css"
 import slackLogo from "./Slack-Icon.svg";
 import { useState } from 'react';
 
-const Login = () => {
+const Login = (props) => {
 
 const [user, setUser] = useState({
       email: "",
@@ -12,9 +12,9 @@ const [user, setUser] = useState({
 
 const [error, setError] = useState("");
 const [loginDetails, setLoginDetails] = useState(null);
+const [loginData, setLoginData] = useState(null);
 
 const signInSlack = async () =>{
-
   const response = await fetch("http://206.189.91.54/api/v1/auth/sign_in",{
     method: "POST",
     headers:{
@@ -33,19 +33,31 @@ const signInSlack = async () =>{
     });
 
     const data = await response.json();
-    console.log(data)
-    console.log(loginDetails);
-    ///////
-    
+    setLoginData(data);
+
+
   }
 
 
+} 
 
+console.log(loginData,loginDetails);
+
+const storeLoginDataAndDetails = ()=>{
+  localStorage.setItem("loginData",JSON.stringify(loginData));
+  localStorage.setItem("loginDetails",JSON.stringify(loginDetails));
+  props.passLoginData(loginData);
+  props.passLoginDetails(loginDetails);
 }
+
+
 
   const onSubmit = (e) => {
     e.preventDefault();
-    signInSlack();
+    signInSlack().then(console.log("test"))
+    
+
+
   };
   return (
     <div className="login">

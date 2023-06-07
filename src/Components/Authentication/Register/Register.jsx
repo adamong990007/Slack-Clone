@@ -53,8 +53,6 @@ const Register = () => {
         
         }
 
-        tes
-
   return (
     <div className="register">
       <div>
