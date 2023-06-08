@@ -25,36 +25,32 @@ const signInSlack = async () =>{
   });
   if(response.status === 200){
     setError("Success");
-    setLoginDetails({
+    const token = {
       "access-token": response.headers.get("access-token"),
-      "client": response.headers.get("client"),
-      "expiry": response.headers.get("expiry"),
-      "uid": response.headers.get("uid")
-    });
+      client: response.headers.get("client"),
+      expiry: response.headers.get("expiry"),
+      uid: response.headers.get("uid"),
+    };
+    setLoginDetails(token);
 
     const data = await response.json();
     setLoginData(data);
-
-
+    storeLoginDataAndDetails(token, data);
   }
-
-
 } 
 
 console.log(loginData,loginDetails);
 
-const storeLoginDataAndDetails = ()=>{
-  localStorage.setItem("loginData",JSON.stringify(loginData));
-  localStorage.setItem("loginDetails",JSON.stringify(loginDetails));
-  props.passLoginData(loginData);
-  props.passLoginDetails(loginDetails);
+const storeLoginDataAndDetails = (token, data)=>{
+  localStorage.setItem("loginData",JSON.stringify(data));
+  localStorage.setItem("loginDetails",JSON.stringify(token));
+  props.passLoginData(data);
+  props.passLoginDetails(token);
 }
-
-
 
   const onSubmit = (e) => {
     e.preventDefault();
-    signInSlack().then(console.log("test"))
+    signInSlack();
     
 
 
